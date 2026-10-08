@@ -1,0 +1,30 @@
+# Build output
+dist/
+build/
+DerivedData/
+*.xcarchive
+*.dmg
+
+# Xcode per-user state
+xcuserdata/
+*.xcuserstate
+
+# macOS
+.DS_Store
+
+# Signing material and secrets — never commit
+*.p12
+*.p8
+*.cer
+*.certSigningRequest
+.env
+
+# Claude Code settings personal to this machine
+.claude/settings.local.json
+BUILD_PLAN.md
+
+# Local checkpoint and workstation-only notes
+PORT_STATUS.md
+兼容改造说明.md
+work/
+.github/workflows/verify.yml

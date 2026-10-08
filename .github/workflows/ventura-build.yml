@@ -1,0 +1,50 @@
+name: Build Compositor Ventura
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ventura-build-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode 26.6
+        run: |
+          sudo xcode-select -s /Applications/Xcode_26.6.app
+          xcodebuild -version
+
+      - name: Build arm64 app for macOS 13
+        run: bash scripts/build-ventura.sh
+
+      - name: Package app preserving its signature
+        run: |
+          ditto -c -k --sequesterRsrc --keepParent \
+            dist/Compositor-Ventura-1.4.6-preview.app \
+            dist/Compositor-Ventura-1.4.6-preview.zip
+
+      - name: Save application artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Compositor-Ventura-arm64-macOS13
+          path: dist/Compositor-Ventura-1.4.6-preview.zip
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Save build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ventura-build-log
+          path: work/ventura-build/build.log
+          if-no-files-found: ignore
+          retention-days: 7
