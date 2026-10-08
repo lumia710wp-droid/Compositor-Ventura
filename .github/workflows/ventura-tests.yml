@@ -1,0 +1,46 @@
+name: Verify Compositor Ventura
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_26.6.app
+      - name: Build test host
+        run: |
+          mkdir -p work
+          xcodebuild build-for-testing -project Compositor.xcodeproj -scheme Compositor \
+            -destination 'platform=macOS,arch=arm64' -configuration Debug \
+            -derivedDataPath work/TestBuild CODE_SIGN_IDENTITY=- \
+            > work/unit-build.log 2>&1 || { tail -n 60 work/unit-build.log; exit 1; }
+      - name: Run core tests
+        run: |
+          xcodebuild test-without-building -project Compositor.xcodeproj -scheme Compositor \
+            -destination 'platform=macOS,arch=arm64' -derivedDataPath work/TestBuild \
+            -only-testing:CompositorTests -parallel-testing-enabled YES \
+            -skip-testing:CompositorTests/FloatingPanelTests \
+            -skip-testing:CompositorTests/SliderSnapTests \
+            > work/unit-core.log 2>&1 || { tail -n 80 work/unit-core.log; exit 1; }
+      - name: Run window tests serially
+        run: |
+          xcodebuild test-without-building -project Compositor.xcodeproj -scheme Compositor \
+            -destination 'platform=macOS,arch=arm64' -derivedDataPath work/TestBuild \
+            -parallel-testing-enabled NO \
+            -only-testing:CompositorTests/FloatingPanelTests \
+            -only-testing:CompositorTests/SliderSnapTests \
+            > work/unit-windows.log 2>&1 || { tail -n 80 work/unit-windows.log; exit 1; }
+      - name: Preserve test logs
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: ventura-unit-test-logs
+          path: work/*.log
+          retention-days: 7

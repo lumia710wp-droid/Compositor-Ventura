@@ -69,13 +69,18 @@ import Testing
         s.cancelFilter(); s.deselect()
         #expect(!s.canContentAwareFill)
     }
-    @Test func visionRequestRunsOnAnImage() async throws {
-        let image = try #require(fixture().activeLayer?.asset?.image)
+    @Test func unsupportedSubjectToolsLeavePixelsUntouched() async throws {
+        let session = try fixture()
+        let image = try #require(session.activeLayer?.asset?.image)
+        #expect(!session.canSelectSubject)
+        session.beginFilter(.removeBackground)
+        #expect(session.filterEdit == nil)
+        #expect(session.activeLayer?.asset?.image === image)
         do {
-            let result = try await Task.detached { try SubjectRemoval.run(image, settings: FilterSettings()) }.value
-            #expect(result.width == image.width && result.height == image.height)
-        } catch SubjectRemoval.Failure.noSubject {
-            // A flat synthetic fixture may correctly contain no recognizable subject.
+            _ = try await Task.detached { try SubjectRemoval.run(image, settings: FilterSettings()) }.value
+            Issue.record("Subject tools must report their unsupported status in the Ventura port.")
+        } catch SubjectRemoval.Failure.unsupported {
+            #expect(session.activeLayer?.asset?.image === image)
         }
     }
 }
