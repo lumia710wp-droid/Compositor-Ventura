@@ -406,7 +406,7 @@ final class CanvasView: NSView {
     private var displayedTransformGeometry: TransformOverlayGeometry?
     private var hoverTrackingArea: NSTrackingArea?
     private static let rotationCursor: NSCursor = {
-        let symbol = NSImage(systemSymbolName: "arrow.triangle.2.circlepath", accessibilityDescription: "Rotate")!
+        let symbol = NSImage(systemSymbolName: "arrow.triangle.2.circlepath", accessibilityDescription: "旋转")!
         let white = symbol.withSymbolConfiguration(.init(paletteColors: [.white]))!
         let black = symbol.withSymbolConfiguration(.init(paletteColors: [.black]))!
         let image = NSImage(size: NSSize(width: 24, height: 24), flipped: false) { _ in
@@ -663,7 +663,7 @@ final class CanvasView: NSView {
         clipsToBounds = true
         setAccessibilityElement(true)
         setAccessibilityRole(.image)
-        setAccessibilityLabel("Canvas")
+        setAccessibilityLabel("画布")
         setAccessibilityIdentifier("editorCanvas")
     }
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -796,9 +796,9 @@ final class CanvasView: NSView {
         guard session.document != nil, event.modifierFlags.contains(.command),
               event.modifierFlags.intersection([.control, .option]).isEmpty else { return false }
 
-        let zoomInIsDefault = ShortcutDefinition.all.first(where: { $0.isMenu && $0.title == "Zoom In" })
+        let zoomInIsDefault = ShortcutDefinition.all.first(where: { $0.isMenu && $0.title == "放大" })
             .map { ShortcutSettings.shared.chord($0) == $0.original } ?? true
-        let zoomOutIsDefault = ShortcutDefinition.all.first(where: { $0.isMenu && $0.title == "Zoom Out" })
+        let zoomOutIsDefault = ShortcutDefinition.all.first(where: { $0.isMenu && $0.title == "缩小" })
             .map { ShortcutSettings.shared.chord($0) == $0.original } ?? true
 
         // '+' is '=' with Shift on a Mac keyboard; the keypad has its own key codes.

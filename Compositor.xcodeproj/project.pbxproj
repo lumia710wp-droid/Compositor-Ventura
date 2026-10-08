@@ -190,9 +190,10 @@
 				};
 			};
 			buildConfigurationList = 8F311F94304F03BB0017D14F /* Build configuration list for PBXProject "Compositor" */;
-			developmentRegion = en;
+			developmentRegion = "zh-Hans";
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				"zh-Hans",
 				en,
 				Base,
 			);
@@ -427,7 +428,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.4.6;
-				PRODUCT_BUNDLE_IDENTIFIER = com.local.compositor.ventura;
+				PRODUCT_BUNDLE_IDENTIFIER = com.local.compositor.ventura.zhHans;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -466,7 +467,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.4.6;
-				PRODUCT_BUNDLE_IDENTIFIER = com.local.compositor.ventura;
+				PRODUCT_BUNDLE_IDENTIFIER = com.local.compositor.ventura.zhHans;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;

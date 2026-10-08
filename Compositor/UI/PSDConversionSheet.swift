@@ -44,7 +44,7 @@ struct PSDConversionSheet: View {
             }
             HStack {
                 Spacer()
-                Button("Cancel") { finish(false) }.keyboardShortcut(.cancelAction)
+                Button("取消") { finish(false) }.keyboardShortcut(.cancelAction)
                 Button(request.confirmTitle) { finish(true) }.keyboardShortcut(.defaultAction)
                     .disabled(request.isReading)
             }

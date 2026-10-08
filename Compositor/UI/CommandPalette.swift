@@ -4,7 +4,7 @@ import AppKit
 /// One thing the command palette can run: a menu command or a tool.
 struct CommandPaletteEntry: Identifiable {
     /// Unique among the entries: the title, with its position added when an earlier entry has the same title (the
-    /// View menu has two items called "Snap").
+    /// View menu has two items called "吸附").
     let id: String
     /// Its full path, as the palette shows it and searches it: "Filter › Gaussian Blur…".
     let title: String
@@ -192,28 +192,28 @@ extension CommandPaletteEntry {
     static func tools(for session: EditorSession) -> [CommandPaletteEntry] {
         typealias Setup = (EditorSession) -> Void
         let tools: [(String, String, NavigationTool, Setup?)] = [
-            ("Move / Transform", "V", .move, nil),
-            ("Rectangular Marquee", "M", .marquee, { $0.marqueeKind = .rectangle }),
-            ("Elliptical Marquee", "M", .marquee, { $0.marqueeKind = .ellipse }),
-            ("Lasso", "L", .lasso, { $0.lassoKind = .freehand }),
-            ("Polygonal Lasso", "L", .lasso, { $0.lassoKind = .polygonal }),
-            ("Magic Wand", "W", .wand, { $0.wandMode = .wand }),
-            ("Crop", "C", .crop, nil),
-            ("Brush", "B", .brush, { $0.brushMode = .paint }),
-            ("Eraser", "E", .brush, { $0.brushMode = .erase }),
-            ("Spot Healing Brush", "J", .spotHealing, nil),
-            ("Clone Stamp", "S", .cloneStamp, nil),
-            ("Liquify", "R", .blur, { $0.blurMode = .liquify }),
-            ("Blur", "R", .blur, { $0.blurMode = .blur }),
-            ("Smudge", "R", .blur, { $0.blurMode = .smudge }),
-            ("Gradient", "G", .gradient, nil),
-            ("Rectangle", "U", .shape, { $0.shapeKind = .rectangle }),
-            ("Ellipse", "U", .shape, { $0.shapeKind = .ellipse }),
-            ("Line", "U", .shape, { $0.shapeKind = .line }),
-            ("Type", "T", .type, nil),
-            ("Eyedropper", "I", .eyedropper, nil),
-            ("Hand", "H", .hand, nil),
-            ("Zoom", "Z", .zoom, nil),
+            ("移动 / 变换", "V", .move, nil),
+            ("矩形选框", "M", .marquee, { $0.marqueeKind = .rectangle }),
+            ("椭圆选框", "M", .marquee, { $0.marqueeKind = .ellipse }),
+            ("套索", "L", .lasso, { $0.lassoKind = .freehand }),
+            ("多边形套索", "L", .lasso, { $0.lassoKind = .polygonal }),
+            ("魔棒", "W", .wand, { $0.wandMode = .wand }),
+            ("裁剪", "C", .crop, nil),
+            ("画笔", "B", .brush, { $0.brushMode = .paint }),
+            ("橡皮擦", "E", .brush, { $0.brushMode = .erase }),
+            ("污点修复画笔", "J", .spotHealing, nil),
+            ("仿制图章", "S", .cloneStamp, nil),
+            ("液化", "R", .blur, { $0.blurMode = .liquify }),
+            ("模糊", "R", .blur, { $0.blurMode = .blur }),
+            ("涂抹", "R", .blur, { $0.blurMode = .smudge }),
+            ("渐变", "G", .gradient, nil),
+            ("矩形", "U", .shape, { $0.shapeKind = .rectangle }),
+            ("椭圆", "U", .shape, { $0.shapeKind = .ellipse }),
+            ("直线", "U", .shape, { $0.shapeKind = .line }),
+            ("文字", "T", .type, nil),
+            ("吸管", "I", .eyedropper, nil),
+            ("抓手", "H", .hand, nil),
+            ("缩放", "Z", .zoom, nil),
         ]
         return tools.map { name, key, tool, setup in
             CommandPaletteEntry(id: "Tool › \(name)", shortcut: key, isEnabled: session.document != nil,

@@ -54,7 +54,7 @@ struct ProjectTabStrip: View {
     @State private var dragging = false
     @State private var dragChangeCount = NSPasteboard(name: .drag).changeCount
     private let dragTimer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
-    /// The "New" drop slot's own natural width, measured once it appears.
+    /// The "新建" drop slot's own natural width, measured once it appears.
     @State private var dropSlotWidth: CGFloat = 0
     /// A tab being reordered by drag, if any.
     @State private var reorder: TabReorderState?
@@ -245,7 +245,7 @@ private struct NewTabDropSlot: View {
     @ObservedObject var workspace: ProjectWorkspace
     @State private var targeted = false
     var body: some View {
-        Label("New", systemImage: "plus")
+        Label("新建", systemImage: "plus")
             .font(.system(size: 12, weight: .medium))
             .padding(.horizontal, 14).frame(height: 28)
             .background(targeted ? Color.accentColor.opacity(0.3) : Color.white.opacity(0.04), in: Capsule())
@@ -337,7 +337,7 @@ private struct ProjectTabButton: View {
             Button { workspace.select(tab.id) } label: {
                 HStack(spacing: 5) {
                     if tab.session.isModified {
-                        Circle().frame(width: 5, height: 5).accessibilityLabel("Unsaved changes")
+                        Circle().frame(width: 5, height: 5).accessibilityLabel("未保存的更改")
                     }
                     Text(tab.title).font(.system(size: 12, weight: active ? .semibold : .medium)).lineLimit(1)
                 }

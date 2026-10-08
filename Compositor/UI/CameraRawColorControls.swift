@@ -13,14 +13,14 @@ struct CameraRawCurveControls: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Picker("Curve", selection: Binding(get: { edit?.cameraRawCurvePage ?? .parametric }, set: { session.filterEdit?.cameraRawCurvePage = $0 })) {
-                ForEach(CameraRawCurvePage.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                ForEach(CameraRawCurvePage.allCases, id: \.self) { Text($0.rawValue.chineseUI).tag($0) }
             }
             .pickerStyle(.segmented)
             .labelsHidden()
             .help("Parametric lifts tonal regions. Point places anchors on the curve.")
             if edit?.cameraRawCurvePage == .point {
-                Picker("Channel", selection: Binding(get: { edit?.cameraRawPointChannel ?? .rgb }, set: { session.filterEdit?.cameraRawPointChannel = $0 })) {
-                    ForEach(CameraRawPointChannel.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                Picker("通道", selection: Binding(get: { edit?.cameraRawPointChannel ?? .rgb }, set: { session.filterEdit?.cameraRawPointChannel = $0 })) {
+                    ForEach(CameraRawPointChannel.allCases, id: \.self) { Text($0.rawValue.chineseUI).tag($0) }
                 }
                 .pickerStyle(.segmented)
                 .labelsHidden()
@@ -33,10 +33,10 @@ struct CameraRawCurveControls: View {
                       ? "Drag up or down to lift or lower those tones. Drag a divider along the bottom to change which tones each region covers."
                       : "Drag a point. Click to add one. Double-click a point to remove it.")
             if edit?.cameraRawCurvePage != .point {
-                amount("Highlights", \.highlights, "Lifts or lowers the brightest tones.")
+                amount("高光", \.highlights, "Lifts or lowers the brightest tones.")
                 amount("Lights", \.lights, "Lifts or lowers the light tones.")
                 amount("Darks", \.darks, "Lifts or lowers the dark tones.")
-                amount("Shadows", \.shadows, "Lifts or lowers the darkest tones.")
+                amount("阴影", \.shadows, "Lifts or lowers the darkest tones.")
             } else {
                 if let point = selectedPoint {
                     Text("In \(Int((point.x * 255).rounded()))   Out \(Int((point.y * 255).rounded()))")
@@ -44,9 +44,9 @@ struct CameraRawCurveControls: View {
                         .foregroundStyle(.secondary)
                         .help("Input and output of the selected curve point.")
                 }
-                Picker("Preset", selection: Binding(get: { CurvePreset.matching(currentPoints) }, set: applyPreset)) {
-                    Text("Custom").tag(CurvePreset.custom)
-                    Text("Linear").tag(CurvePreset.linear)
+                Picker("预设", selection: Binding(get: { CurvePreset.matching(currentPoints) }, set: applyPreset)) {
+                    Text("自定义").tag(CurvePreset.custom)
+                    Text("线性").tag(CurvePreset.linear)
                     Text("Medium Contrast").tag(CurvePreset.medium)
                     Text("Strong Contrast").tag(CurvePreset.strong)
                 }
@@ -272,7 +272,7 @@ struct CameraRawMixerControls: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Picker("Mixer", selection: Binding(get: { edit?.cameraRawMixerPage ?? .hsl }, set: { session.filterEdit?.cameraRawMixerPage = $0 })) {
-                ForEach(CameraRawMixerPage.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                ForEach(CameraRawMixerPage.allCases, id: \.self) { Text($0.rawValue.chineseUI).tag($0) }
             }
             .pickerStyle(.segmented)
             .labelsHidden()
@@ -280,16 +280,16 @@ struct CameraRawMixerControls: View {
             switch edit?.cameraRawMixerPage ?? .hsl {
             case .hsl:
                 Picker("Component", selection: Binding(get: { edit?.cameraRawMixerTab ?? .hue }, set: { session.filterEdit?.cameraRawMixerTab = $0 })) {
-                    ForEach(CameraRawMixerTab.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                    ForEach(CameraRawMixerTab.allCases, id: \.self) { Text($0.rawValue.chineseUI).tag($0) }
                 }
                 .pickerStyle(.segmented).labelsHidden()
                 .help("Hue shifts the color, Saturation its strength, and Luminance its brightness.")
                 ForEach(0..<8, id: \.self) { index in familySlider(index) }
             case .color:
                 swatches
-                colorSlider("Hue", \.hue, "Shifts the selected color family around the wheel.")
-                colorSlider("Saturation", \.saturation, "Makes the selected color family stronger or quieter.")
-                colorSlider("Luminance", \.luminance, "Makes the selected color family lighter or darker.")
+                colorSlider("色相", \.hue, "Shifts the selected color family around the wheel.")
+                colorSlider("饱和度", \.saturation, "Makes the selected color family stronger or quieter.")
+                colorSlider("亮度", \.luminance, "Makes the selected color family lighter or darker.")
             case .point:
                 pointColor
             }
@@ -433,7 +433,7 @@ struct CameraRawGradingControls: View {
             // Five segments spelled out want 453 points and the docked panel has 374, so the
             // choice is a menu rather than a row that runs past the panel's edge.
             Picker("Grading", selection: Binding(get: { page }, set: { session.filterEdit?.cameraRawGradePage = $0 })) {
-                ForEach(CameraRawGradePage.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                ForEach(CameraRawGradePage.allCases, id: \.self) { Text($0.rawValue.chineseUI).tag($0) }
             }
             .pickerStyle(.menu)
             .labelsHidden()
@@ -441,9 +441,9 @@ struct CameraRawGradingControls: View {
             .help("Three-Way shows shadows, midtones, and highlights. The other choices show one wheel.")
             if page == .threeWay {
                 HStack(spacing: 30) {
-                    wheel("Shadows", \.shadows)
-                    wheel("Midtones", \.midtones)
-                    wheel("Highlights", \.highlights)
+                    wheel("阴影", \.shadows)
+                    wheel("中间调", \.midtones)
+                    wheel("高光", \.highlights)
                 }
             } else {
                 wheel(page.rawValue, pageKey)
@@ -451,7 +451,7 @@ struct CameraRawGradingControls: View {
             slider("Blending", raw.grading.blending, 0...100, 50, "Controls how much the three tonal wheels overlap.") { value in
                 update { $0.grading.blending = value }
             }
-            slider("Balance", raw.grading.balance, -100...100, 0, "Shifts the wheels toward shadows or highlights.") { value in
+            slider("平衡", raw.grading.balance, -100...100, 0, "Shifts the wheels toward shadows or highlights.") { value in
                 update { $0.grading.balance = value }
             }
         }

@@ -10,9 +10,9 @@ struct LayerMaskMenu: View {
             session.addMask(revealing: NSApp.currentEvent?.modifierFlags.contains(.option) != true)
         } label: { Image(systemName: "rectangle.inset.filled").footerHitArea() }
             .buttonStyle(.borderless)
-            .help(session.selection == nil ? "Add layer mask (Option-click for a black mask)"
-                  : "Add layer mask revealing the selection (Option-click to hide it)")
-            .accessibilityLabel("Add layer mask")
+            .help(session.selection == nil ? "添加图层蒙版（按住 Option 单击创建黑色蒙版）"
+                  : "添加显示选区的蒙版（按住 Option 单击隐藏选区）")
+            .accessibilityLabel("添加图层蒙版")
             .disabled(!session.canEditMask || session.activeLayer?.mask != nil)
     }
 }
@@ -38,7 +38,7 @@ final class MaskAloneBadgeView: NSView {
         self.close = close
         let icon = NSImageView(image: NSImage(systemSymbolName: "rectangle.inset.filled", accessibilityDescription: nil) ?? NSImage())
         icon.symbolConfiguration = .init(pointSize: 11, weight: .regular)
-        let title = NSTextField(labelWithString: "Layer Mask")
+        let title = NSTextField(labelWithString: "图层蒙版")
         title.font = .systemFont(ofSize: 12, weight: .semibold)
         title.textColor = .white
         name.font = .systemFont(ofSize: 12)

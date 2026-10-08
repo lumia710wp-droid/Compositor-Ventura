@@ -10,12 +10,15 @@ struct BlendModePicker: NSViewRepresentable {
         // with a line between, so a long list stays readable.
         for (index, group) in LayerBlendMode.groups.enumerated() {
             if index > 0 { button.menu?.addItem(.separator()) }
-            for mode in group { button.addItem(withTitle: mode.rawValue) }
+            for mode in group {
+                button.addItem(withTitle: mode.rawValue.chineseUI)
+                button.lastItem?.representedObject = mode.rawValue
+            }
         }
         button.menu?.delegate = context.coordinator
         button.target = context.coordinator
         button.action = #selector(Coordinator.choose(_:))
-        button.setAccessibilityLabel("Blend mode")
+        button.setAccessibilityLabel("混合模式")
         // Use the classic rounded pop-up bezel available on Ventura.
         button.bezelStyle = .rounded
         return button
@@ -23,7 +26,7 @@ struct BlendModePicker: NSViewRepresentable {
     func updateNSView(_ button: NSPopUpButton, context: Context) {
         button.isEnabled = session.canEditAppearance
         if !context.coordinator.tracking {
-            button.selectItem(withTitle: (session.activeLayer?.blendMode ?? .normal).rawValue)
+            button.selectItem(withTitle: (session.activeLayer?.blendMode ?? .normal).rawValue.chineseUI)
         }
     }
     static func dismantleNSView(_ button: NSPopUpButton, coordinator: Coordinator) {
@@ -45,7 +48,7 @@ struct BlendModePicker: NSViewRepresentable {
             // AppKit briefly reports no highlighted item while dismissing the menu.
             // Keep the last preview alive until the selection action has committed so
             // the canvas never flashes back to the layer's previous mode.
-            guard let mode = item.flatMap({ LayerBlendMode(rawValue: $0.title) }) else { return }
+            guard let mode = item.flatMap({ ($0.representedObject as? String).flatMap { LayerBlendMode(rawValue: $0) } }) else { return }
             highlightedMode = mode
             session.previewBlendMode(mode, for: layerID)
         }
@@ -61,9 +64,9 @@ struct BlendModePicker: NSViewRepresentable {
         }
         @objc func choose(_ button: NSPopUpButton) {
             guard session.activeLayerID == layerID,
-                  let mode = highlightedMode ?? button.selectedItem.flatMap({ LayerBlendMode(rawValue: $0.title) }) else { return }
+                  let mode = highlightedMode ?? button.selectedItem.flatMap({ ($0.representedObject as? String).flatMap { LayerBlendMode(rawValue: $0) } }) else { return }
             session.setLayerBlendMode(mode)
-            button.selectItem(withTitle: mode.rawValue)
+            button.selectItem(withTitle: mode.rawValue.chineseUI)
             highlightedMode = nil
             session.refreshCanvasPreview?()
         }

@@ -24,23 +24,23 @@ struct ColorRangeSheet: View {
                                          : "Click the image to pick the color to select.")
                 .font(.callout).foregroundStyle(.secondary)
             HStack(spacing: 10) {
-                Text("Fuzziness").fixedSize()
+                Text("颜色容差").fixedSize()
                     .scrubbable(sensitivity: 1, value: fuzziness, range: ColorRangeEdit.fuzzinessRange)
                 Slider(value: fuzziness, in: ColorRangeEdit.fuzzinessRange)
-                TextField("Fuzziness", value: fuzziness, format: .number.precision(.fractionLength(0)))
+                TextField("颜色容差", value: fuzziness, format: .number.precision(.fractionLength(0)))
                     .frame(width: 48).textFieldStyle(.roundedBorder).multilineTextAlignment(.trailing)
             }
             .help("How far a color may be from the picked ones and still be selected")
-            Toggle("Invert", isOn: Binding(get: { edit?.invert ?? false }, set: { edit?.invert = $0; session.updateColorRange() }))
+            Toggle("反相", isOn: Binding(get: { edit?.invert ?? false }, set: { edit?.invert = $0; session.updateColorRange() }))
                 .help("Select everything except those colors, such as all but a green screen")
             if let error = edit?.error {
                 Text(error).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
             }
             Divider()
             HStack {
-                Button("Cancel") { session.cancelColorRange() }.configuredNativeShortcut(.escape)
+                Button("取消") { session.cancelColorRange() }.configuredNativeShortcut(.escape)
                 Spacer()
-                Button("OK") { session.commitColorRange() }
+                Button("确定") { session.commitColorRange() }
                     .configuredNativeShortcut(.return).buttonStyle(.borderedProminent)
             }
         }

@@ -10,7 +10,7 @@ struct CommandPaletteView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            TextField("Search commands and tools", text: $model.query)
+            TextField("搜索命令和工具", text: $model.query)
                 .textFieldStyle(.plain).font(.system(size: 17))
                 .padding(.horizontal, 16).padding(.vertical, 13)
                 .focused($searching)
@@ -32,7 +32,7 @@ struct CommandPaletteView: View {
                 }
                 .frame(maxHeight: .infinity)
                 .overlay {
-                    if model.results.isEmpty { Text("No commands match").foregroundStyle(.secondary) }
+                    if model.results.isEmpty { Text("没有匹配的命令").foregroundStyle(.secondary) }
                 }
                 .legacyOnChange(of: model.selection) { _, _ in
                     if let id = model.selected?.id { scroller.scrollTo(id) }
@@ -54,7 +54,7 @@ struct CommandPaletteView: View {
             if entry.isOn {
                 Image(systemName: "checkmark").font(.caption.weight(.semibold)).frame(width: 12)
             }
-            Text(entry.title).lineLimit(1)
+            Text(entry.title.chineseUI).lineLimit(1)
             Spacer()
             if let shortcut = entry.shortcut { Text(shortcut).font(.callout.monospaced()).foregroundStyle(.secondary) }
         }
@@ -71,7 +71,7 @@ struct CommandPaletteView: View {
 final class CommandPaletteController {
     static let shared = CommandPaletteController()
     /// Left out of the palette: the palette itself and the system menus.
-    static let skipped: Set<String> = ["Command Palette…", "Window", "Help", "Services"]
+    static let skipped: Set<String> = ["命令面板…", "窗口", "帮助", "Services"]
 
     private(set) var panel: PalettePanel?
     private weak var window: NSWindow?

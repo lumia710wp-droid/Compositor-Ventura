@@ -25,9 +25,9 @@ struct ColorPickerSheet: View {
                 HStack(alignment: .top, spacing: 16) {
                     preview
                     VStack(spacing: 8) {
-                        Button { finish(true) } label: { Text("OK").frame(maxWidth: .infinity) }
+                        Button { finish(true) } label: { Text("确定").frame(maxWidth: .infinity) }
                             .configuredNativeShortcut(.return)
-                        Button { finish(false) } label: { Text("Cancel").frame(maxWidth: .infinity) }
+                        Button { finish(false) } label: { Text("取消").frame(maxWidth: .infinity) }
                             .configuredNativeShortcut(.escape)
                     }
                     .controlSize(.large).frame(width: 90)
@@ -92,7 +92,7 @@ struct ColorPickerSheet: View {
         .gesture(DragGesture(minimumDistance: 0).onChanged { value in
             hsb.hue = (1 - min(1, max(0, value.location.y / fieldSize))) * 360
         })
-        .accessibilityLabel("Hue")
+        .accessibilityLabel("色相")
         .accessibilityValue("\(Int(hsb.hue.rounded())) degrees")
     }
 
@@ -140,7 +140,7 @@ struct ColorPickerSheet: View {
                                 rgb[keyPath: channel] = CGFloat(min(255, max(0, newValue.rounded()))) / 255
                                 hsb.setRGB(rgb)
                             })
-                .accessibilityLabel(label == "R" ? "Red" : label == "G" ? "Green" : "Blue")
+                .accessibilityLabel(label == "R" ? "红色" : label == "G" ? "绿色" : "蓝色")
         }
     }
 

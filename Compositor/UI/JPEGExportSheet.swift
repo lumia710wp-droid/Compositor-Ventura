@@ -34,9 +34,9 @@ struct JPEGExportSheet: View {
     @ViewBuilder private var sheet: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 8) {
-                Text("Export JPEG").font(.title2.bold())
+                Text("导出 JPEG").font(.title2.bold())
                 Spacer()
-                Button("Fit") { zoom = nil }.disabled(zoom == nil)
+                Button("适合窗口") { zoom = nil }.disabled(zoom == nil)
                     .help("Show the whole image (⌘0)")
                 Button { zoomBy(1) } label: { Image(systemName: "plus.magnifyingglass") }
                     .disabled(JPEGPreview.step(from: shownZoom, in: 1) == nil)
@@ -58,7 +58,7 @@ struct JPEGExportSheet: View {
             }.frame(width: JPEGPreview.frame.width, height: JPEGPreview.frame.height).clipped()
                 .help("Drag or scroll to move around; double-click switches between Fit and 100%")
             HStack {
-                Text("Quality")
+                Text("质量")
                 Slider(value: $options.quality, in: 0...1, step: 0.01)
                 Text("\(Int((options.quality * 100).rounded()))%")
                     .monospacedDigit().frame(width: 45, alignment: .trailing)
@@ -75,9 +75,9 @@ struct JPEGExportSheet: View {
                 if let error { Text(error).foregroundStyle(.red) }
                 else if readyOptions == options, let result {
                     Text(ByteCountFormatter.string(fromByteCount: Int64(result.data.count), countStyle: .file)).monospacedDigit()
-                } else { Text("Updating…").foregroundStyle(.secondary) }
-                Button("Cancel") { DialogColorSwatch.closePicker(session); finish(nil) }.configuredNativeShortcut(.escape)
-                Button("Export…") {
+                } else { Text("正在更新…").foregroundStyle(.secondary) }
+                Button("取消") { DialogColorSwatch.closePicker(session); finish(nil) }.configuredNativeShortcut(.escape)
+                Button("导出…") {
                     DialogColorSwatch.closePicker(session)
                     UserDefaults.standard.set(options.quality, forKey: Self.qualityKey)
                     finish(result?.data)

@@ -29,14 +29,14 @@ jobs:
       - name: Package app preserving its signature
         run: |
           ditto -c -k --sequesterRsrc --keepParent \
-            dist/Compositor-Ventura-1.4.6-preview.app \
-            dist/Compositor-Ventura-1.4.6-preview.zip
+            dist/Compositor-Ventura-1.4.6-zh-Hans.app \
+            dist/Compositor-Ventura-1.4.6-zh-Hans.zip
 
       - name: Save application artifact
         uses: actions/upload-artifact@v7.0.2
         with:
-          name: Compositor-Ventura-arm64-macOS13
-          path: dist/Compositor-Ventura-1.4.6-preview.zip
+          name: Compositor-Ventura-zh-Hans-arm64-macOS13
+          path: dist/Compositor-Ventura-1.4.6-zh-Hans.zip
           if-no-files-found: error
           retention-days: 7
 

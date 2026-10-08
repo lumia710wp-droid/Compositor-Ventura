@@ -88,10 +88,10 @@ extension ProjectController {
 
     private func askToRevert(in window: NSWindow) async -> Bool {
         let alert = NSAlert()
-        alert.messageText = "“\(session.projectURL?.lastPathComponent ?? "Untitled")” was changed on disk."
+        alert.messageText = "“\(session.projectURL?.lastPathComponent ?? "未命名")” was changed on disk."
         alert.informativeText = "Another app changed this project. You can revert to the version on disk, losing your unsaved changes, or keep what you have."
-        alert.addButton(withTitle: "Revert")
-        alert.addButton(withTitle: "Keep Mine")
+        alert.addButton(withTitle: "恢复")
+        alert.addButton(withTitle: "保留当前版本")
         return await alert.beginSheetModal(for: window) == .alertFirstButtonReturn
     }
 }

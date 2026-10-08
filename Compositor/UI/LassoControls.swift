@@ -5,13 +5,13 @@ struct LassoControls: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            Text(session.tool == .marquee ? "Marquee" : session.tool == .wand ? "Magic" : "Lasso").font(ToolHeaderStyle.titleFont)
+            Text(session.tool == .marquee ? "选框" : session.tool == .wand ? "Magic" : "套索").font(ToolHeaderStyle.titleFont)
             if session.tool == .marquee {
-                Picker("Shape", selection: Binding(get: { session.marqueeKind }, set: { kind in
+                Picker("形状", selection: Binding(get: { session.marqueeKind }, set: { kind in
                     session.cancelLasso()
                     session.marqueeKind = kind
                 })) {
-                    ForEach(LassoKind.marqueeChoices, id: \.self) { Text($0.rawValue).tag($0) }
+                    ForEach(LassoKind.marqueeChoices, id: \.self) { Text($0.rawValue.chineseUI).tag($0) }
                 }
                 .pickerStyle(.segmented).labelsHidden().fixedSize()
                 .help("Press M to switch between Rectangle and Ellipse")
@@ -21,17 +21,17 @@ struct LassoControls: View {
                     session.cancelLasso()
                     session.wandMode = mode
                 })) {
-                    Text(WandMode.wand.rawValue).tag(WandMode.wand)
+                    Text(WandMode.wand.rawValue.chineseUI).tag(WandMode.wand)
                 }
                 .pickerStyle(.segmented).labelsHidden().fixedSize()
                 .help("Select pixels by color. Object detection is unavailable in the Ventura build.")
             }
             if session.tool == .lasso {
-                Picker("Lasso", selection: Binding(get: { session.lassoKind }, set: { kind in
+                Picker("套索", selection: Binding(get: { session.lassoKind }, set: { kind in
                     session.cancelLasso()
                     session.lassoKind = kind
                 })) {
-                    ForEach(LassoKind.lassoChoices, id: \.self) { Text($0.rawValue).tag($0) }
+                    ForEach(LassoKind.lassoChoices, id: \.self) { Text($0.rawValue.chineseUI).tag($0) }
                 }
                 .pickerStyle(.segmented).labelsHidden().fixedSize()
                 .help("Press L to switch between Freehand and Polygonal")
@@ -39,7 +39,7 @@ struct LassoControls: View {
             // Shows held Shift/Option (or an outline's mode) live; clicking sets the choice.
             Picker("Mode", selection: Binding(get: { session.displayedSelectionMode },
                                               set: { session.selectionModeChoice = $0 })) {
-                ForEach(SelectionMode.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                ForEach(SelectionMode.allCases, id: \.self) { Text($0.rawValue.chineseUI).tag($0) }
             }
             .pickerStyle(.segmented).labelsHidden().fixedSize()
             .help("Hold Shift to add or Option to subtract for one outline")
@@ -47,7 +47,7 @@ struct LassoControls: View {
             if session.tool == .wand, session.wandMode == .object { objectSelectionControls }
             // Rectangles snap to whole pixels, so smoothing doesn't apply (as in Photoshop); ellipses curve.
             if session.tool == .lasso || session.tool == .wand || (session.tool == .marquee && session.marqueeKind == .ellipse) {
-                Toggle("Anti-alias", isOn: $session.selectionAntialiased)
+                Toggle("消除锯齿", isOn: $session.selectionAntialiased)
                     .help(session.tool == .wand && session.wandMode == .object ? "Smooth the detected object outline; turn off for the raw pixel mask" : "Smooth selection edges; turn off for hard pixel edges")
             }
             Divider().frame(height: 18)
@@ -59,10 +59,10 @@ struct LassoControls: View {
             }
             // Softens the selection's edge, as Select → Feather does.
             HStack(spacing: 5) {
-                Button("Feather") { session.featherSelection(by: session.selectionFeatherAmount) }
+                Button("羽化") { session.featherSelection(by: session.selectionFeatherAmount) }
                     .disabled(!session.canModifySelection)
                     .help("Fade the edge of the selection by this many pixels")
-                TextField("Feather", value: Binding(get: { Double(session.selectionFeatherAmount) },
+                TextField("羽化", value: Binding(get: { Double(session.selectionFeatherAmount) },
                                                     set: { session.selectionFeatherAmount = $0.isFinite ? Int(min(250, max(1, $0))) : 2 }),
                           format: .number.precision(.fractionLength(0)))
                     .frame(width: 48).textFieldStyle(.roundedBorder).multilineTextAlignment(.trailing)
@@ -74,7 +74,7 @@ struct LassoControls: View {
             Spacer(minLength: 0)
             if let selection = session.selection {
                 if selection.isEmpty { Text("Empty selection").foregroundStyle(.secondary) }
-                Button("Deselect") { session.deselect() }.disabled(!session.canEditSelection)
+                Button("取消选择") { session.deselect() }.disabled(!session.canEditSelection)
             }
         }
         .padding(.horizontal, 18).toolHeaderBar().releasesFocusOnCommit(session)
@@ -85,8 +85,8 @@ struct LassoControls: View {
     private var wandControls: some View {
         HStack(spacing: 12) {
             HStack(spacing: 6) {
-                Text("Tolerance").scrubbable(sensitivity: 1, value: $session.wandSettings.tolerance, range: 0...255)
-                TextField("Tolerance", value: Binding(get: { session.wandSettings.tolerance },
+                Text("容差").scrubbable(sensitivity: 1, value: $session.wandSettings.tolerance, range: 0...255)
+                TextField("容差", value: Binding(get: { session.wandSettings.tolerance },
                                                       set: { session.wandSettings.tolerance = min(255, max(0, $0)) }),
                           format: .number)
                     .frame(width: 44).textFieldStyle(.roundedBorder)
@@ -95,27 +95,27 @@ struct LassoControls: View {
                                 change: { session.wandSettings.tolerance = Int(min(255, max(0, $0.rounded()))) })
             }
             .help("How far each color channel (0–255) can differ from the clicked color and still be selected")
-            Picker("Sample Size", selection: $session.wandSettings.sampleSize) {
+            Picker("取样大小", selection: $session.wandSettings.sampleSize) {
                 ForEach(WandSampleSize.allCases, id: \.self) { Text($0.title).tag($0) }
             }
             .labelsHidden().fixedSize()
             .help("Match the clicked pixel, or the average of the pixels around it")
-            Picker("Sample", selection: $session.wandSettings.sampleAllLayers) {
-                Text("This Layer").tag(false)
-                Text("All Layers").tag(true)
+            Picker("取样", selection: $session.wandSettings.sampleAllLayers) {
+                Text("当前图层").tag(false)
+                Text("所有图层").tag(true)
             }
             .pickerStyle(.segmented).labelsHidden().fixedSize()
             .help("Read colors from the active layer only, or from every visible layer as shown")
-            Toggle("Contiguous", isOn: $session.wandSettings.contiguous)
+            Toggle("连续", isOn: $session.wandSettings.contiguous)
                 .help("Select only similar pixels connected to the one you click; off selects them everywhere")
         }
     }
 
     private var objectSelectionControls: some View {
         HStack(spacing: 12) {
-            Picker("Sample", selection: $session.objectSelectionSettings.sampleAllLayers) {
-                Text("This Layer").tag(false)
-                Text("All Layers").tag(true)
+            Picker("取样", selection: $session.objectSelectionSettings.sampleAllLayers) {
+                Text("当前图层").tag(false)
+                Text("所有图层").tag(true)
             }
             .pickerStyle(.segmented).labelsHidden().fixedSize()
             .help("Analyze the active layer only, or every visible layer as shown")
@@ -207,14 +207,14 @@ struct SelectionAmountSheet: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 10) {
-                Text("Amount").frame(minWidth: 60, alignment: .leading)
+                Text("数量").frame(minWidth: 60, alignment: .leading)
                     .scrubbable(sensitivity: 1,
                                 value: Binding<Int>(get: { amount ?? 1 }, set: { input = String($0) }),
                                 range: 1...maximum)
                 Slider(value: Binding(get: { Double(amount ?? 1) },
                                       set: { input = String(Int($0.rounded())) }),
                        in: 1...Double(maximum), step: 1)
-                TextField("Amount", text: $input)
+                TextField("数量", text: $input)
                     .frame(width: 56).textFieldStyle(.roundedBorder)
                     .multilineTextAlignment(.trailing).focused($focused)
                     .unitSuffix("px")
@@ -224,10 +224,10 @@ struct SelectionAmountSheet: View {
                 .opacity(amount == nil ? 1 : 0)
             Divider()
             HStack {
-                Button("Cancel") { session.selectionAmountOperation = nil }
+                Button("取消") { session.selectionAmountOperation = nil }
                     .configuredNativeShortcut(.escape)
                 Spacer()
-                Button("OK") {
+                Button("确定") {
                     if let amount { session.confirmSelectionAmount(amount) }
                 }
                 .configuredNativeShortcut(.return).buttonStyle(.borderedProminent)

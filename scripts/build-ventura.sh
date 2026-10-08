@@ -12,7 +12,7 @@ if [ "${xcode_version%%.*}" -lt 26 ]; then
     exit 2
 fi
 build_root="$project_root/work/ventura-build"
-app_output="$project_root/dist/Compositor-Ventura-1.4.6-preview.app"
+app_output="$project_root/dist/Compositor-Ventura-1.4.6-zh-Hans.app"
 if [ -e "$app_output" ]; then
     echo "Refusing to overwrite the existing app: $app_output" >&2
     exit 2

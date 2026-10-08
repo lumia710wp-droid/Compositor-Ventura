@@ -13,7 +13,7 @@ struct LayerAppearanceControls: View {
                 BlendModePicker(session: session)
             }.disabled(!session.canEditAppearance)
             HStack(spacing: 6) {
-                Text("Opacity").font(.caption)
+                Text("不透明度").font(.caption)
                     .scrubbable(sensitivity: 1,
                                 value: Binding<Double>(get: { (session.activeLayer?.opacity ?? 1) * 100 }, set: step),
                                 range: 0...100,

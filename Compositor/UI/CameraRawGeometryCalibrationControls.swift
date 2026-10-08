@@ -8,9 +8,9 @@ struct CameraRawGeometryControls: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Upright").font(.subheadline)
-            Picker("Upright", selection: uprightBinding) {
-                ForEach(CameraRawUprightMode.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+            Text("垂直校正").font(.subheadline)
+            Picker("垂直校正", selection: uprightBinding) {
+                ForEach(CameraRawUprightMode.allCases, id: \.self) { Text($0.rawValue.chineseUI).tag($0) }
             }
             .labelsHidden()
             .pickerStyle(.segmented)
@@ -29,21 +29,21 @@ struct CameraRawGeometryControls: View {
                         .font(.caption).foregroundStyle(.secondary)
                 }
                 if !raw.geometry.guides.isEmpty {
-                    Button("Clear Guides") {
+                    Button("清除参考线") {
                         update { $0.cameraRaw.geometry.guides = [] }
                     }
                     .help("Remove every guide line.")
                 }
             }
-            Picker("Projection", selection: binding(\.projection)) {
-                ForEach(CameraRawProjection.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+            Picker("投影", selection: binding(\.projection)) {
+                ForEach(CameraRawProjection.allCases, id: \.self) { Text($0.rawValue.chineseUI).tag($0) }
             }
             .help("Perspective allows stronger keystone. Rectilinear keeps the warp gentler.")
-            geometrySlider("Vertical", \.vertical, help: "Straightens vertical lines toward the center.")
-            geometrySlider("Horizontal", \.horizontal, help: "Straightens horizontal lines toward the center.")
-            geometrySlider("Rotate", \.rotate, range: CameraRawGeometrySettings.rotateRange, help: "Rotates the picture around its center.")
-            geometrySlider("Aspect", \.aspect, help: "Stretches width relative to height.")
-            geometrySlider("Scale", \.scale, help: "Zooms the transformed picture within the frame.")
+            geometrySlider("垂直", \.vertical, help: "Straightens vertical lines toward the center.")
+            geometrySlider("水平", \.horizontal, help: "Straightens horizontal lines toward the center.")
+            geometrySlider("旋转", \.rotate, range: CameraRawGeometrySettings.rotateRange, help: "Rotates the picture around its center.")
+            geometrySlider("宽高比", \.aspect, help: "Stretches width relative to height.")
+            geometrySlider("缩放", \.scale, help: "Zooms the transformed picture within the frame.")
             geometrySlider("Offset X", \.offsetX, help: "Moves the picture left or right.")
             geometrySlider("Offset Y", \.offsetY, help: "Moves the picture up or down.")
             Toggle("Constrain Crop", isOn: binding(\.constrainCrop))
@@ -94,8 +94,8 @@ struct CameraRawCalibrationControls: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Picker("Process", selection: binding(\.process)) {
-                ForEach(CameraRawProcessVersion.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+            Picker("处理版本", selection: binding(\.process)) {
+                ForEach(CameraRawProcessVersion.allCases, id: \.self) { Text($0.rawValue.chineseUI).tag($0) }
             }
             .help("Chooses how strongly the calibration sliders below are applied. Version 6 is the current default.")
             Text(raw.calibration.process.summary)
@@ -103,17 +103,17 @@ struct CameraRawCalibrationControls: View {
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
                 .help(raw.calibration.process.summary)
-            Text("Shadows").font(.subheadline)
-            calibrationSlider("Tint", \.shadowTint, help: "Adds green or magenta to the darkest tones.")
-            Text("Red Primary").font(.subheadline)
-            calibrationSlider("Hue", \.redHue, help: "Shifts how red is interpreted.")
-            calibrationSlider("Saturation", \.redSaturation, help: "Strengthens or weakens the red primary.")
-            Text("Green Primary").font(.subheadline)
-            calibrationSlider("Hue", \.greenHue, help: "Shifts how green is interpreted.")
-            calibrationSlider("Saturation", \.greenSaturation, help: "Strengthens or weakens the green primary.")
-            Text("Blue Primary").font(.subheadline)
-            calibrationSlider("Hue", \.blueHue, help: "Shifts how blue is interpreted.")
-            calibrationSlider("Saturation", \.blueSaturation, help: "Strengthens or weakens the blue primary.")
+            Text("阴影").font(.subheadline)
+            calibrationSlider("色调", \.shadowTint, help: "Adds green or magenta to the darkest tones.")
+            Text("红色原色").font(.subheadline)
+            calibrationSlider("色相", \.redHue, help: "Shifts how red is interpreted.")
+            calibrationSlider("饱和度", \.redSaturation, help: "Strengthens or weakens the red primary.")
+            Text("绿色原色").font(.subheadline)
+            calibrationSlider("色相", \.greenHue, help: "Shifts how green is interpreted.")
+            calibrationSlider("饱和度", \.greenSaturation, help: "Strengthens or weakens the green primary.")
+            Text("蓝色原色").font(.subheadline)
+            calibrationSlider("色相", \.blueHue, help: "Shifts how blue is interpreted.")
+            calibrationSlider("饱和度", \.blueSaturation, help: "Strengthens or weakens the blue primary.")
         }
     }
 
