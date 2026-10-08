@@ -16,7 +16,7 @@ final class CompositorApplicationDelegate: NSObject, NSApplicationDelegate {
             // appears. A Dock click's reopen event makes the window, so the app sends itself one once launched.
             else { DispatchQueue.main.async { Self.reopen() } }
         }
-        application.activate()
+        application.activate(ignoringOtherApps: true)
         Task { await workspace.receive(urls) }
     }
 
