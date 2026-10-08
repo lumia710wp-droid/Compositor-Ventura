@@ -22,6 +22,7 @@ xcodebuild -project "$project_root/Compositor.xcodeproj" -scheme Compositor \
     -configuration Release -destination 'generic/platform=macOS' \
     -derivedDataPath "$build_root" \
     MACOSX_DEPLOYMENT_TARGET=13.0 ARCHS=arm64 ONLY_ACTIVE_ARCH=NO \
+    SWIFT_OPTIMIZATION_LEVEL=-Onone SWIFT_COMPILATION_MODE=singlefile \
     CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build \
     > "$build_root/build.log" 2>&1 || {
         echo "Build failed. See $build_root/build.log" >&2
