@@ -37,10 +37,16 @@ import QuartzCore
 
     /// A stroke in progress as one texture: the layer's old pixels (or old mask) with the stroke's tiles written in as
     /// they change, so a frame uploads only the tiles the last few dabs touched.
+    private struct StrokeTileKey: Hashable {
+        let x: CGFloat
+        let y: CGFloat
+        init(_ point: CGPoint) { x = point.x; y = point.y }
+    }
+
     private final class StrokeTexture {
         let texture: MTLTexture
         let image: CIImage
-        var written: [CGPoint: ObjectIdentifier] = [:]
+        var written: [StrokeTileKey: ObjectIdentifier] = [:]
         init(texture: MTLTexture, image: CIImage) {
             self.texture = texture
             self.image = image
@@ -156,7 +162,7 @@ import QuartzCore
         strokes[id] = (stroke, entry, frame)
         let writes = TileWrites(renderer: self, into: entry.texture, mask: stroke.isMask)
         for patch in stroke.patches {
-            let key = patch.rect.origin, identity = ObjectIdentifier(patch.image)
+            let key = StrokeTileKey(patch.rect.origin), identity = ObjectIdentifier(patch.image)
             guard entry.written[key] != identity else { continue }
             if writes.place(patch.image, at: patch.rect) { entry.written[key] = identity }
         }

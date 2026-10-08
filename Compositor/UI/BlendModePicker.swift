@@ -16,7 +16,7 @@ struct BlendModePicker: NSViewRepresentable {
         button.target = context.coordinator
         button.action = #selector(Coordinator.choose(_:))
         button.setAccessibilityLabel("Blend mode")
-        // A capsule like the SwiftUI buttons and menus (`roundedControls`), which don't reach this AppKit pop-up.
+        // Use the classic rounded pop-up bezel available on Ventura.
         button.bezelStyle = .rounded
         return button
     }
