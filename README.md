@@ -1,12 +1,12 @@
 # Compositor
 
-> Experimental Apple-silicon port for macOS 13, based on upstream commit `fa41b9b6693b8e1b3a01a13a9ea112edd8e008e3`. Full build and Ventura runtime verification are in progress. Subject/object detection, automatic background removal, and official automatic updates are disabled. Core image editing remains the target scope.
+> Experimental Apple-silicon port for macOS 13, based on upstream commit `fa41b9b6693b8e1b3a01a13a9ea112edd8e008e3`. Cloud build and 536 unit tests have passed. Launch and project loading were verified on macOS 13.7.8; interactive Ventura save/export and visual checks remain pending. Subject/object detection, automatic background removal, and official automatic updates are disabled. Core image editing remains the target scope.
 
 ## Building the Ventura port
 
 Run the **Build Compositor Ventura** workflow manually from the Actions tab. It uses a GitHub-hosted macOS 26 runner with Xcode 26.6 to build an arm64 app targeting macOS 13. Download the application ZIP from the successful run's artifacts. No paid Apple developer certificate is required for this personal-use build; the app is ad-hoc signed.
 
-For a local build on a compatible build machine, run `bash scripts/build-ventura.sh` with Xcode 26 or later. The target Mac running the application can use macOS 13. Creating an installable artifact does not establish full compatibility: startup, rendering, saving/reopening projects, and export still need verification on Ventura.
+For a local build on a compatible build machine, run `bash scripts/build-ventura.sh` with Xcode 26 or later. The target Mac running the application can use macOS 13. The compatibility preview disables Swift optimization to work around an Xcode 26.6 optimizer crash. Large-project responsiveness and interactive save/export on Ventura need further checking. The macOS 26 cloud tests passed 529 core cases and 7 window cases. This build was launched and loaded a two-layer project on macOS 13.7.8.
 
 Original project: [robbietilton/Compositor](https://github.com/robbietilton/Compositor), by Robbie Tilton. Original MIT license retained. The upstream documentation below describes the original release and its system requirements.
 
