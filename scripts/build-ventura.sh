@@ -39,6 +39,6 @@ if [ "${minimum_os%%.*}" -gt 13 ]; then
     echo "Verification failed: bundle requires macOS $minimum_os" >&2
     exit 1
 fi
-lipo -verify_arch arm64 "$app_output/Contents/MacOS/Compositor"
+lipo "$app_output/Contents/MacOS/Compositor" -verify_arch arm64
 echo "Built and ad-hoc signed: $app_output"
 echo 'The app still needs launch, rendering, save/reopen, and export verification on macOS 13.'
