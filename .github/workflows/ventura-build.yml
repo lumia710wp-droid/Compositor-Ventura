@@ -16,7 +16,7 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
 
       - name: Select Xcode 26.6
         run: |
@@ -33,7 +33,7 @@ jobs:
             dist/Compositor-Ventura-1.4.6-preview.zip
 
       - name: Save application artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: Compositor-Ventura-arm64-macOS13
           path: dist/Compositor-Ventura-1.4.6-preview.zip
@@ -42,7 +42,7 @@ jobs:
 
       - name: Save build log
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: ventura-build-log
           path: work/ventura-build/build.log
