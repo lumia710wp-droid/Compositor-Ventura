@@ -232,16 +232,16 @@ struct CompositorApp: App {
                     Button("反向") { session.invertSelection() }
                         .configuredKeyboardShortcut("i", modifiers: [.command, .shift])
                         .disabled(session.selection == nil || !session.canEditSelection)
-                    Button("Layer's Pixels") {
+                    Button("图层像素") {
                         if let id = session.activeLayerID { session.loadLayerSelection(layerID: id) }
                     }
                         .disabled(session.activeLayer?.asset == nil || !session.canEditSelection)
-                    Button("Subject") { Task { await session.selectSubject() } }
+                    Button("主体") { Task { await session.selectSubject() } }
                         .configuredKeyboardShortcut("a", modifiers: [.command, .option])
                         .disabled(!session.canSelectSubject)
                     Button("色彩范围…") { session.beginColorRange() }
                         .disabled(!session.canSelectColorRange)
-                    Button("Mask's Black Areas") {
+                    Button("蒙版黑色区域") {
                         if let id = session.activeLayerID { session.loadMaskSelection(layerID: id) }
                     }
                         .disabled(session.activeLayer?.mask == nil || !session.canEditSelection)
@@ -258,10 +258,10 @@ struct CompositorApp: App {
                         .configuredKeyboardShortcut("m").disabled(!session.canAdjustColors || session.hueSaturation != nil)
                     Button("色阶…") { session.beginLevels() }
                         .configuredKeyboardShortcut("l").disabled(!session.canAdjustColors || session.hueSaturation != nil)
-                    Button("Hue/Saturation…") { session.beginHueSaturation() }
+                    Button("色相/饱和度…") { session.beginHueSaturation() }
                         .configuredKeyboardShortcut("u").disabled(!session.canAdjustColors)
                     ForEach([FilterKind.blackWhite, .colorBalance, .exposure, .gradientMap, .grain], id: \.self) { kind in
-                        Button("\(kind.rawValue)…") { session.beginFilter(kind) }
+                        Button("\(kind.rawValue.chineseUI)…") { session.beginFilter(kind) }
                             .disabled(!session.canAdjustColors || session.hueSaturation != nil)
                     }
                     Button(session.isMaskSelected ? "反相蒙版" : "反相") { Task { await session.invertPixels() } }
@@ -290,21 +290,21 @@ struct CompositorApp: App {
                 }
                 CommandMenu("滤镜") {
                     ForEach(FilterKind.allCases.filter { $0 != .contentAwareFill && $0.isSupported && !$0.isImageAdjustment }, id: \.self) { kind in
-                        Button("\(kind.rawValue)…") { session.beginFilter(kind) }
+                        Button("\(kind.rawValue.chineseUI)…") { session.beginFilter(kind) }
                             .disabled(!(kind == .vignette ? session.canVignette : session.canAdjustColors) || session.hueSaturation != nil)
                     }
                 }
                 CommandMenu("图层") {
                     Menu("新建调整图层") {
                         ForEach(AdjustmentKind.allCases, id: \.self) { kind in
-                            Button(kind.rawValue + (kind.isEditable ? "…" : "")) { session.addAdjustment(kind) }
+                            Button(kind.rawValue.chineseUI + (kind.isEditable ? "…" : "")) { session.addAdjustment(kind) }
                         }
                     }.disabled(!session.canEditLayers || session.document == nil)
-                    Button("Edit Adjustment…") {
+                    Button("编辑调整…") {
                         session.adjustmentEditingID = session.activeLayerID
                     }.disabled(!session.canEditLayers || session.activeLayer?.adjustment == nil)
                     Divider()
-                    Button(session.canTransformSelection ? "变换选区" : "Transform Layer") { session.transformCommand() }
+                    Button(session.canTransformSelection ? "变换选区" : "变换图层") { session.transformCommand() }
                         .configuredKeyboardShortcut("t").disabled(!session.canTransform && !session.canTransformSelection)
                     Button(session.selection == nil ? "复制图层" : "通过拷贝的图层") { session.layerViaCopy() }
                         .configuredKeyboardShortcut("j").disabled(!session.canCopyPixels && !(session.selection == nil && session.canEditLayers && session.activeLayer != nil))
@@ -325,7 +325,7 @@ struct CompositorApp: App {
                         .configuredKeyboardShortcut("n", modifiers: [.command, .shift]).disabled(!session.canEditLayers)
                     Button("重命名图层…") { session.renamingLayerID = session.activeLayerID }
                         .disabled(!session.canEditLayers || session.activeLayer == nil)
-                    Button(session.activeLayer?.isVisible == false ? "Show Layer" : "Hide Layer") {
+                    Button(session.activeLayer?.isVisible == false ? "显示图层" : "隐藏图层") {
                         if let id = session.activeLayerID { session.toggleLayerVisibility(id) }
                     }.disabled(!session.canEditLayers || session.activeLayer == nil)
                     Divider()
@@ -334,16 +334,16 @@ struct CompositorApp: App {
                     Button("下移图层") { session.moveActiveLayer(by: -1) }
                         .configuredKeyboardShortcut("[").disabled(!session.canMoveActiveLayer(by: -1))
                     Group {
-                        Button(session.mergeTitle) { session.mergeLayers() }
+                        Button(session.mergeTitle.chineseUI) { session.mergeLayers() }
                             .configuredKeyboardShortcut("e").disabled(!session.canMergeLayers)
                         Divider()
-                        Button("Flip Layer Horizontal") { session.flipLayers(horizontally: true) }
+                        Button("水平翻转图层") { session.flipLayers(horizontally: true) }
                             .disabled(!session.canTransform)
-                        Button("Flip Layer Vertical") { session.flipLayers(horizontally: false) }
+                        Button("垂直翻转图层") { session.flipLayers(horizontally: false) }
                             .disabled(!session.canTransform)
                     }
                     Divider()
-                    Button(session.selectedEffect != nil ? "Delete " + session.selectedEffect!.kind.rawValue : session.isMaskSelected && session.activeLayer?.mask != nil ? "删除图层蒙版" : session.selectedLayerIDs.count > 1 ? "删除图层" : "删除图层") {
+                    Button(session.selectedEffect != nil ? "删除" + session.selectedEffect!.kind.rawValue.chineseUI : session.isMaskSelected && session.activeLayer?.mask != nil ? "删除图层蒙版" : session.selectedLayerIDs.count > 1 ? "删除图层" : "删除图层") {
                         session.deleteLayerOrMask()
                     }
                         .disabled(!session.canEditLayers || session.activeLayer == nil)

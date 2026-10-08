@@ -243,7 +243,7 @@ private struct KeyboardShortcutsSheet: View {
                 LazyVStack(alignment: .leading, spacing: 6) {
                     ForEach(["Menus", "Canvas & Layers", "Text Editing"], id: \.self) { group in
                         Text(group.chineseUI).font(.headline).padding(.top, 8)
-                        ForEach(ShortcutDefinition.all.filter { $0.group == group && (search.isEmpty || $0.title.localizedCaseInsensitiveContains(search)) }) { definition in
+                        ForEach(ShortcutDefinition.all.filter { $0.group == group && (search.isEmpty || $0.title.chineseUI.localizedCaseInsensitiveContains(search) || $0.title.localizedCaseInsensitiveContains(search)) }) { definition in
                             HStack {
                                 Text(definition.title.chineseUI)
                                 Spacer()
@@ -259,7 +259,7 @@ private struct KeyboardShortcutsSheet: View {
                         }
                     }
                     Divider().padding(.vertical, 8)
-                    Text("Contextual keys & mouse gestures").font(.headline)
+                    Text("快捷键与鼠标手势").font(.headline)
                     Text("Text fields keep standard macOS editing keys. Dialogs share the Apply/Cancel assignments above. Numeric fields use Up/Down, with Shift for larger steps. Standard macOS commands include ⌘Q to quit and ⌃⌘F for full screen. The shortcut editor itself always uses Return to save and Esc to cancel when not recording.")
                     Text("Option temporarily selects the eyedropper in painting tools. Shift constrains shapes/movement or adds to a selection; Option subtracts from selections or draws from center. Command-drag moves selected pixels; Command-Option-drag copies them. Option-drag duplicates layers/folders/effects; Option-click at a layer boundary toggles clipping. Command-click a thumbnail loads its selection. Control bypasses snapping. Right-drag adjusts brush size. Modifier-and-mouse gestures are fixed.")
                 }.padding(.trailing, 8)
@@ -272,10 +272,10 @@ private struct KeyboardShortcutsSheet: View {
             }
             Divider()
             HStack {
-                Button("Restore Defaults") { recording = nil; draft = [:] }
+                Button("恢复默认设置") { recording = nil; draft = [:] }
                 Spacer()
-                Button("Cancel") { settings.close() }.keyboardShortcut(.cancelAction)
-                Button("Save") { settings.save(draft) }.keyboardShortcut(.defaultAction)
+                Button("取消") { settings.close() }.keyboardShortcut(.cancelAction)
+                Button("保存") { settings.save(draft) }.keyboardShortcut(.defaultAction)
                     .buttonStyle(.borderedProminent)
                     .disabled(recording != nil || ShortcutSettings.problem(in: draft) != nil)
             }
@@ -291,8 +291,8 @@ private struct ShortcutRecorder: NSViewRepresentable {
     func makeNSView(context: Context) -> RecorderButton { RecorderButton() }
     func updateNSView(_ button: RecorderButton, context: Context) {
         button.start = start; button.finish = finish; button.recording = recording
-        button.title = recording ? "Press keys…" : chord.label
-        button.setAccessibilityLabel(recording ? "Press a shortcut" : chord.label)
+        button.title = recording ? "按下组合键…" : chord.label
+        button.setAccessibilityLabel(recording ? "按下快捷键" : chord.label)
         if recording, button.window?.firstResponder !== button { button.window?.makeFirstResponder(button) }
     }
     final class RecorderButton: NSButton {

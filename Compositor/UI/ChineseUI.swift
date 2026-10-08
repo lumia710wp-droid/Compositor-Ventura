@@ -2,10 +2,10 @@ import Foundation
 
 // Translate display labels without changing project identifiers or enum raw values.
 extension String {
-    var chineseUI: String { ChineseUI.labels[self] ?? self }
+    nonisolated var chineseUI: String { ChineseUI.labels[self] ?? self }
 }
 
-enum ChineseUI {
+nonisolated enum ChineseUI {
     static let labels: [String: String] = [
         "3 by 3 Average": "3 × 3 平均",
         "5 by 5 Average": "5 × 5 平均",
